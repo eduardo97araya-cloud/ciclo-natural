@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ciclo Natural</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Ciclo Natural">
+<meta name="theme-color" content="#fff7f9">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{
+  --bg:#fff7f9; --card:#ffffff; --ink:#3a2a31; --muted:#9a8590; --line:#f3e3e9;
+  --pink:#e0668f; --pink-d:#c94d77; --pink-soft:#fde8ef; --pink-mid:#f7c6d6;
+  --red:#d1404a; --green:#4a9e66; --yellow:#eec443; --gray:#d9cdd2;
+  --r:20px; --shadow:0 1px 2px rgba(150,60,90,.06),0 4px 16px rgba(150,60,90,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#1d1619; --card:#2a2025; --ink:#f6e9ee; --muted:#b39aa5; --line:#3b2d33; --pink:#f08bad; --pink-d:#f08bad; --pink-soft:#3d2630; --pink-mid:#6b3a4d; --gray:#5a4a51; --shadow:none}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif}
+body{padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit}
+main{padding:calc(14px + env(safe-area-inset-top)) 18px 24px;max-width:640px;margin:0 auto}
+.hidden{display:none!important}
+.card{background:var(--card);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow)}
+.title{font-size:28px;font-weight:800;letter-spacing:-.02em;margin:4px 0 2px}
+.sub{color:var(--muted);font-size:15px}
+.label{font-size:14px;color:var(--muted);margin:0 0 10px;font-weight:600}
+.sec{margin-bottom:22px}
+
+/* Encabezado Hoy */
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.arrow{width:40px;height:40px;border-radius:50%;border:0;background:var(--card);box-shadow:var(--shadow);font-size:22px;line-height:1;color:var(--pink-d)}
+.datebtn{border:0;background:none;text-align:center;flex:1;position:relative;padding:0}
+.datebtn input{position:absolute;inset:0;opacity:0;width:100%}
+.datebtn .title{font-size:24px}
+
+/* Tarjeta de estado */
+.hero{display:flex;gap:16px;align-items:center}
+.hero .t{font-size:19px;font-weight:700}
+.hero .d{font-size:14px;color:var(--muted);margin-top:2px}
+.rule{margin-top:14px;padding:12px 14px;background:var(--pink-soft);border-radius:14px;font-size:14px;color:var(--ink)}
+.rule small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
+
+/* Chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:10px 16px;font-size:15px;min-height:44px;display:inline-flex;align-items:center;gap:8px}
+.chip.on{background:var(--pink);border-color:var(--pink);color:#fff;font-weight:600}
+.chip .dot{width:14px;height:14px;border-radius:4px;flex:none;border:1px solid rgba(0,0,0,.12)}
+.scroll{display:flex;gap:8px;overflow-x:auto;margin:0 -18px;padding:2px 18px 4px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.scroll .chip{flex:none;background:var(--card);box-shadow:var(--shadow);border-color:transparent}
+
+.toggles{display:flex;gap:8px;flex-wrap:wrap}
+.notebox{width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px;font:inherit;background:var(--card);color:var(--ink);min-height:48px;resize:none}
+.link{border:0;background:none;color:var(--pink-d);font-weight:600;padding:8px 0}
+.saved{font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
+
+/* Pasos y mosaicos */
+.step-h{display:flex;gap:12px;align-items:flex-start;margin:18px 0 10px}
+.step-h:first-child{margin-top:0}
+.step-h .n{width:26px;height:26px;border-radius:50%;background:var(--pink);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none}
+.step-h b{display:block;font-size:16px}
+.step-h small{display:block;color:var(--muted);font-size:13px}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tiles.t3{grid-template-columns:1fr 1fr 1fr}
+.tile{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:10px 12px;text-align:left;min-height:52px;display:flex;flex-direction:column;justify-content:center;gap:2px;position:relative}
+.tile b{font-size:15px;font-weight:600}
+.tile small{font-size:12px;color:var(--muted);line-height:1.25}
+.tile .lv{position:absolute;right:10px;top:10px;display:flex;gap:2px}
+.tile .lv i{width:5px;height:12px;border-radius:2px;background:var(--line)}
+.tile .lv i.f{background:var(--pink)}
+.tile.on{border-color:var(--pink);background:var(--pink-soft)}
+.tile.on b{color:var(--pink-d)}
+.tiles.t3 .tile{text-align:center;align-items:center}
+details.fix{margin-top:16px}
+details.fix summary{color:var(--muted);font-size:14px;cursor:pointer}
+/* Calendario */
+.cal{padding:12px 10px}
+.cal-wd{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-d{border:0;background:var(--bg);border-radius:12px;padding:4px 0 3px;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:62px}
+.cal-d.empty{background:transparent}
+.cal-d.fut{opacity:.45}
+.cal-d.today{box-shadow:inset 0 0 0 2px var(--pink)}
+.cal-d .dn{font-size:12px;font-weight:600;line-height:1}
+.cal-d .stamp{width:26px;height:26px;font-size:12px;border-radius:7px}
+.cal-d .stamp .x{font-size:20px}
+.cal-d .stamp .i{font-size:8px;padding:0 3px;right:-4px;bottom:-4px}
+.cal-d .stamp .warn{font-size:9px;left:-4px;top:-5px}
+.cal-d .ph{width:26px;height:26px}
+.cal-d .cd{font-size:9px;color:var(--muted);line-height:1;min-height:9px}
+#calSum b{font-size:15px}
+/* Guía */
+.guide details{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:10px;padding:0 16px}
+.guide summary{list-style:none;cursor:pointer;padding:16px 0;font-weight:700;font-size:16px;display:flex;justify-content:space-between;align-items:center}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:'›';color:var(--pink-d);font-size:22px;transition:transform .2s}
+.guide details[open] summary::after{transform:rotate(90deg)}
+.guide .body{padding-bottom:16px;font-size:14.5px}
+.guide .body p{margin:0 0 10px}
+.guide .rule-c{border-left:4px solid var(--pink);background:var(--pink-soft);border-radius:0 12px 12px 0;padding:10px 12px;margin:8px 0}
+.guide .rule-c b{display:block;color:var(--pink-d)}
+.guide .srow{display:flex;gap:12px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+.guide .srow:last-child{border-bottom:0}
+.guide .srow .stamp{width:30px;height:30px}
+/* Parámetros */
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:34px;height:34px;border-radius:50%;border:0;background:var(--pink-soft);color:var(--pink-d);font-size:20px;font-weight:700;line-height:1}
+.stepper span{min-width:28px;text-align:center;font-weight:700}
+.li .ld{display:block}
+.li .ld small{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+/* Sellos */
+.stamp{width:32px;height:32px;border-radius:9px;position:relative;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.stamp.big{width:64px;height:64px;border-radius:18px;font-size:26px}
+.st-red{background:var(--red);color:#fff}
+.st-spot{background:var(--green);background-image:radial-gradient(var(--red) 22%,transparent 24%);background-size:8px 8px;color:#fff}
+.st-green{background:var(--green);color:#fff}
+.st-yellow{background:var(--yellow);color:#4a3a00}
+.st-white{background:#fff;color:var(--pink-d);box-shadow:inset 0 0 0 1.5px var(--pink-mid)}
+.st-none{background:transparent;box-shadow:inset 0 0 0 1.5px var(--gray);color:var(--muted)}
+.st-white svg{width:72%;height:72%}
+.stamp .x{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--red);font-weight:900}
+.stamp.big .x{font-size:46px}
+.stamp .num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.stamp .i{position:absolute;right:-5px;bottom:-5px;background:var(--pink-d);color:#fff;border-radius:7px;font-size:10px;padding:1px 5px;font-weight:800}
+.stamp.big .i{font-size:13px;right:-7px;bottom:-7px}
+.stamp .warn{position:absolute;left:-6px;top:-7px;font-size:12px}
+
+/* Gráfica */
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.summary b{display:block;font-size:22px;color:var(--pink-d)}
+.summary span{font-size:12px;color:var(--muted)}
+.seg{display:flex;background:var(--pink-soft);border-radius:12px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;border:0;border-radius:10px;padding:8px;background:transparent;font-size:14px;color:var(--muted)}
+.seg button.on{background:var(--card);color:var(--ink);font-weight:600;box-shadow:var(--shadow)}
+.cyc-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.cyc-h b{font-size:16px}
+.cyc-h span{font-size:13px;color:var(--muted)}
+.strip{overflow-x:auto;margin:0 -18px;padding:0 18px 4px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip table{border-collapse:separate;border-spacing:4px 0}
+.strip td{text-align:center;vertical-align:top;min-width:40px;padding:4px 0;border-radius:10px}
+.strip .r-date td{font-size:10px;color:var(--muted)}
+.strip .r-day td{font-size:12px;font-weight:700}
+.strip .r-st td .stamp{margin:4px auto}
+.strip .r-txt td{font-size:9px;color:var(--muted);line-height:1.15;max-width:44px;word-break:break-word}
+.strip td.today{background:var(--pink-soft)}
+.bars td{height:80px;vertical-align:bottom!important}
+.bar{width:26px;margin:0 auto;border-radius:8px 8px 3px 3px;position:relative;color:#fff;font-size:12px;font-weight:800;display:flex;justify-content:center;padding-top:3px}
+details.legend summary{list-style:none;cursor:pointer;color:var(--pink-d);font-weight:600;font-size:15px}
+details.legend summary::-webkit-details-marker{display:none}
+.leg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;font-size:13px}
+.leg div{display:flex;align-items:center;gap:8px}
+.leg .stamp{width:24px;height:24px;font-size:11px}
+.leg .stamp .x{font-size:18px}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin:-4px 0 14px}
+
+/* PBI */
+.help p{font-size:14px;margin:10px 0 0}
+.muted{color:var(--muted)}
+.tag{padding:1px 7px;border-radius:6px;font-size:13px;font-weight:600}
+.tag.g{background:var(--green);color:#fff}.tag.y{background:var(--yellow);color:#4a3a00}.tag.w{background:#fff;color:var(--pink-d);box-shadow:inset 0 0 0 1px var(--pink-mid)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:12px 14px;width:100%}
+.opt .rd{width:20px;height:20px;border-radius:50%;border:2px solid var(--gray);flex:none;margin-top:2px}
+.opt.on{border-color:var(--pink);background:var(--pink-soft)}
+.opt.on .rd{border:6px solid var(--pink)}
+.opt b{display:block;font-size:15px}
+.opt span{font-size:13px;color:var(--muted)}
+.subbox{margin-top:14px;padding:14px;border-radius:16px;background:var(--bg)}
+.subbox .chip{min-height:38px;padding:7px 13px;font-size:14px}
+.sug{margin-top:14px;padding:12px 14px;border-radius:14px;background:var(--pink-soft);font-size:14px}
+.sug button{margin-top:8px;border:0;background:var(--pink);color:#fff;border-radius:10px;padding:8px 14px;font-weight:600}
+.alert{background:var(--pink-soft);border-radius:16px;padding:12px 14px;font-size:14px;margin-bottom:14px}
+.alert b{color:var(--pink-d)}
+/* Ajustes */
+.list{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin-bottom:8px}
+.li{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);min-height:52px}
+.li:last-child{border-bottom:0}
+.li label{font-size:15px}
+.li select,.li input{border:0;background:transparent;font:inherit;color:var(--pink-d);text-align:right;max-width:60%;appearance:none;-webkit-appearance:none}
+.li input::placeholder{color:var(--muted)}
+.li.btnrow{color:var(--pink-d);font-weight:600;cursor:pointer}
+.foot{font-size:12.5px;color:var(--muted);padding:4px 6px 16px}
+.bigbtn{width:100%;border:0;border-radius:16px;background:var(--pink);color:#fff;font-weight:700;font-size:16px;padding:16px;margin-bottom:8px}
+
+/* Navegación */
+nav{position:fixed;bottom:0;left:0;right:0;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:10}
+nav button{flex:1;border:0;background:none;color:var(--muted);font-size:11.5px;padding:8px 0 9px;display:flex;flex-direction:column;align-items:center;gap:3px}
+nav button.on{color:var(--pink-d);font-weight:700}
+nav svg{width:24px;height:24px}
+
+/* Hoja inferior y diálogo */
+.sheet-bg{position:fixed;inset:0;background:rgba(40,10,20,.35);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);border-radius:24px 24px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));width:100%;max-width:640px;animation:up .2s ease-out}
+.sheet .grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 14px}
+.sheet .act{display:block;width:100%;border:0;background:var(--pink-soft);color:var(--pink-d);font-weight:600;border-radius:14px;padding:14px;margin-top:8px;font-size:15px}
+.sheet .act.main{background:var(--pink);color:#fff}
+.sheet .act.plain{background:transparent;color:var(--muted)}
+.sheet textarea{width:100%;min-height:90px;font-size:12px;border-radius:12px;border:1px solid var(--line);padding:10px;background:var(--bg);color:var(--ink)}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:40}
+.toast.show{opacity:1}
+@media print{
+  nav,.noprint{display:none!important}
+  body{padding:0;background:#fff;color:#000}
+  .strip{overflow:visible}
+  .card{box-shadow:none;border:1px solid #eee}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main>
+  <!-- HOY -->
+  <section id="v-hoy">
+    <div class="top">
+      <button class="arrow" id="prevDay" aria-label="Día anterior">‹</button>
+      <label class="datebtn">
+        <div class="title" id="dayTitle">Hoy</div>
+        <div class="sub" id="daySub"></div>
+        <input type="date" id="datePick" aria-label="Elegir fecha">
+      </label>
+      <button class="arrow" id="nextDay" aria-label="Día siguiente">›</button>
+    </div>
+
+    <div class="card">
+      <div class="hero">
+        <div id="stBig"></div>
+        <div><div class="t" id="stTitle"></div><div class="d" id="stDesc"></div></div>
+      </div>
+      <div class="rule hidden" id="stRule"></div>
+    </div>
+
+    <div class="alert hidden noprint" id="bipAlert"></div>
+    <div class="sec noprint" id="quickSec">
+      <div class="label">Registro rápido</div>
+      <div class="scroll" id="quick"></div>
+    </div>
+
+    <div class="card noprint" id="editCard">
+      <div class="step-h"><span class="n">1</span><div><b>¿Hubo sangrado?</b><small>Lo que vio en el papel o la ropa interior</small></div></div>
+      <div class="tiles t3" id="g-b"></div>
+      <div class="step-h"><span class="n">2</span><div><b>¿Qué sintió en la vulva?</b><small>Durante el día, al caminar o moverse. Elija lo más fértil del día.</small></div></div>
+      <div class="tiles" id="g-s"></div>
+      <div class="step-h"><span class="n">3</span><div><b>¿Qué vio?</b><small>El aspecto de la secreción, si vio alguna</small></div></div>
+      <div class="tiles" id="g-a"></div>
+      <div class="step-h"><span class="n">4</span><div><b>¿Hubo relación?</b><small>Se marca con una «I» sobre el sello</small></div></div>
+      <div class="tiles t2"><button class="tile" id="t-i0"><b>No</b></button><button class="tile" id="t-i"><b>Sí</b></button></div>
+      <details class="fix"><summary>Corregir la interpretación de este día</summary>
+        <div class="muted" style="font-size:13px;margin:8px 0">Úselo solo si su instructora le indica que este día se interpreta distinto.</div>
+        <div class="tiles t2">
+          <button class="tile" id="t-pbi"><b>Es mi PBI</b><small>Contarlo como día infértil del patrón</small></button>
+          <button class="tile" id="t-chg"><b>Es un cambio</b><small>Contarlo como cambio del PBI</small></button>
+        </div>
+      </details>
+      <button class="link" id="noteToggle">+ Agregar nota</button>
+      <textarea class="notebox hidden" id="nota" rows="2" placeholder="Dolor, estrés, enfermedad, viaje…"></textarea>
+      <div class="row" style="display:flex;justify-content:space-between;align-items:center">
+        <span class="saved" id="savedTxt"></span>
+        <button class="link" id="delDay" style="color:var(--muted);font-weight:400">Borrar día</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CALENDARIO -->
+  <section id="v-cal" class="hidden">
+    <div class="top">
+      <button class="arrow" id="calPrev" aria-label="Mes anterior">‹</button>
+      <button class="datebtn" id="calToday"><div class="title" id="calTitle"></div><div class="sub">Toque un día para ver detalles</div></button>
+      <button class="arrow" id="calNext" aria-label="Mes siguiente">›</button>
+    </div>
+    <div class="card cal">
+      <div class="cal-wd"><span>L</span><span>M</span><span>K</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+    <div class="card"><div class="summary" id="calSum"></div></div>
+    <button class="bigbtn noprint pdfBtn">Descargar PDF</button>
+  </section>
+
+  <!-- GRÁFICA -->
+  <section id="v-graf" class="hidden">
+    <div class="title" id="grafTitle" style="margin-bottom:14px">Gráfica</div>
+    <div class="card"><div class="summary" id="summary"></div></div>
+    <button class="bigbtn noprint pdfBtn">Descargar PDF</button>
+    <div class="seg noprint" id="chartMode" style="margin-top:6px">
+      <button data-m="sellos" class="on">Sellos</button>
+      <button data-m="barras">Barras</button>
+    </div>
+    <div class="hint noprint">Toque un día para ver detalles</div>
+    <div id="chart"></div>
+    <div class="card">
+      <details class="legend"><summary>¿Qué significa cada sello?</summary><div class="leg" id="legend"></div></details>
+    </div>
+  </section>
+
+  <!-- GUÍA -->
+  <section id="v-guia" class="hidden guide">
+    <div class="title" style="margin-bottom:6px">Guía</div>
+    <div class="sub" style="margin-bottom:16px">El método de la ovulación, explicado paso a paso.</div>
+    <details open><summary>1. Cómo observar cada día</summary><div class="body">
+      <p>Durante el día, al caminar o moverse, ponga atención a <b>lo que siente en la vulva</b> (seca, húmeda, resbalosa…) y, si la hay, a <b>cómo se ve</b> la secreción.</p>
+      <p>En la noche anote <b>lo más fértil</b> que notó en todo el día. No se hacen exámenes internos.</p>
+      <p>Orden de fertilidad, de menor a mayor: <b>seca → pegajosa → húmeda → mojada → resbalosa</b>. Las rayitas rosadas en cada botón muestran ese nivel.</p>
+    </div></details>
+    <details><summary>2. Qué significa cada sello</summary><div class="body" id="guiaSellos"></div></details>
+    <details><summary>3. El Patrón Básico Infértil (PBI)</summary><div class="body">
+      <p>Es lo que siente y ve <b>siempre igual</b>, día tras día, en los días infértiles antes de la ovulación. Puede ser <b>seco</b>, de <b>flujo sin cambios</b> o <b>combinado</b>.</p>
+      <p>Mientras el patrón no cambia, son días infértiles. Cualquier <b>cambio</b> (más humedad, otra secreción o sangrado) puede ser el inicio de la fertilidad.</p>
+      <p><button class="link" data-go="ajus">Configurar mi PBI ›</button></p>
+    </div></details>
+    <details><summary>4. La Cúspide</summary><div class="body">
+      <p>Es el <b>último día de sensación resbalosa</b>, justo antes de un cambio brusco a ya no resbalosa ni mojada. Se reconoce <b>al día siguiente</b>.</p>
+      <p>Es el día más fértil del ciclo; la ovulación ocurre muy cerca de ese día. No es necesariamente el día con más moco.</p>
+      <p>Se marca con una <b>✕</b> y luego se cuentan <b>1, 2, 3</b>. Si en esos días vuelve la sensación mojada o resbalosa, esa Cúspide se anula y se espera la siguiente.</p>
+      <p>La regla suele llegar entre 11 y 16 días después de la Cúspide.</p>
+    </div></details>
+    <details><summary>5. Las 4 reglas para posponer</summary><div class="body" id="guiaReglas"></div></details>
+    <details><summary>6. Para lograr un embarazo</summary><div class="body">
+      <p>Use las mismas observaciones. Cuando aparezca un cambio, espere la <b>sensación resbalosa</b>: son los días más fértiles.</p>
+      <p>Las relaciones en los días resbalosos y en el día 1 o 2 después de la Cúspide dan la mayor probabilidad.</p>
+    </div></details>
+    <details><summary>7. Situaciones especiales</summary><div class="body">
+      <p><b>Lactancia, después de anticonceptivos, ciclos largos o premenopausia:</b> puede haber semanas o meses de PBI, a menudo combinado. Cuando aparece una Cúspide, el PBI anterior ya no vale y hay que definir uno nuevo.</p>
+      <p><b>Enfermedad, estrés o viajes</b> pueden retrasar la ovulación: anótelos en la nota del día.</p>
+    </div></details>
+    <div class="foot">Esta guía resume las reglas publicadas del método de la ovulación. No sustituye la enseñanza de una instructora acreditada.</div>
+  </section>
+
+  <!-- AJUSTES -->
+  <section id="v-ajus" class="hidden">
+    <div class="title" style="margin-bottom:14px">Ajustes</div>
+    <button class="bigbtn" id="shareBtn">Compartir con el lector</button>
+    <div class="foot">Envía un enlace de solo lectura con la gráfica de hoy. Para mostrar cambios, envíe un enlace nuevo.</div>
+
+    <div class="label" style="padding-left:6px">Perfil</div>
+    <div class="list">
+      <div class="li"><label for="sName">Nombre</label><input id="sName" type="text" placeholder="Opcional"></div>
+      <div class="li"><label for="sGoal">Objetivo</label><select id="sGoal"><option value="registro">Solo registrar</option><option value="posponer">Posponer embarazo</option><option value="lograr">Lograr embarazo</option></select></div>
+      <div class="li"><label for="sGuide">Mostrar reglas</label><select id="sGuide"><option value="1">Sí</option><option value="0">No</option></select></div>
+    </div>
+    <div class="foot"></div>
+
+    <div class="label" style="padding-left:6px">Patrón Básico Infértil (PBI)</div>
+    <div class="card">
+      <details class="legend" id="pbiHelp"><summary>¿Qué es el PBI?</summary>
+        <div class="help">
+          <p>Es lo que usted <b>siente y ve todos los días, sin cambios</b>, en los días infértiles antes de la ovulación (normalmente después de la regla).</p>
+          <p>Mientras el patrón <b>se mantiene igual</b>, son días infértiles. Cuando <b>cambia</b> (aparece más humedad, otra secreción o sangrado), puede estar empezando la fertilidad y se aplica la regla de esperar.</p>
+          <p>La app compara cada día con su PBI: <span class="tag g">verde</span> si es seco, <span class="tag y">amarillo</span> si es su flujo sin cambios y <span class="tag w">blanco con bebé</span> si es un cambio.</p>
+          <p class="muted">Lo ideal es definirlo con su instructora, observando unos 2 o 3 ciclos.</p>
+        </div>
+      </details>
+      <div class="label" style="margin-top:14px">¿Cómo es su PBI?</div>
+      <div class="opts" id="bipOpts"></div>
+      <div id="bipFlujoBox" class="subbox hidden">
+        <div class="label">Su flujo de todos los días se siente…</div><div class="chips" id="bf-s"></div>
+        <div class="label" style="margin-top:12px">…y se ve…</div><div class="chips" id="bf-a"></div>
+      </div>
+      <div id="bipCombBox" class="subbox hidden">
+        <div class="label">Sensaciones que forman parte de su patrón (puede elegir varias)</div><div class="chips" id="bc-s"></div>
+        <div class="label" style="margin-top:12px">Lo que se ve en su patrón (puede elegir varias)</div><div class="chips" id="bc-a"></div>
+        <div class="muted" style="font-size:12.5px;margin-top:8px">Mojada, resbalosa, transparente y elástico nunca forman parte del PBI: siempre se cuentan como cambio.</div>
+      </div>
+      <div id="bipSug"></div>
+    </div>
+
+    <div class="label" style="padding-left:6px">Etapa de vida</div>
+    <div class="list">
+      <div class="li"><label for="sSit">Situación actual</label><select id="sSit">
+        <option value="normal">Ciclos regulares</option>
+        <option value="lactancia">Lactancia / después del parto</option>
+        <option value="postanti">Después de anticonceptivos</option>
+        <option value="largos">Ciclos largos o irregulares</option>
+        <option value="premeno">Premenopausia</option>
+      </select></div>
+    </div>
+    <div class="foot" id="sitTip"></div>
+
+    <div class="label" style="padding-left:6px">Parámetros del método</div>
+    <div class="list" id="parList"></div>
+    <div class="foot">Valores según las reglas publicadas. Cámbielos solo si su instructora se lo indica. <button class="link" id="parReset" style="padding:0;font-size:12.5px">Restaurar valores</button></div>
+
+    <div class="label" style="padding-left:6px">Datos</div>
+    <div class="list">
+      <div class="li btnrow pdfBtn">Descargar PDF con gráficas</div>
+      <div class="li btnrow" id="expBtn">Exportar respaldo</div>
+      <div class="li btnrow" id="impBtn">Importar respaldo</div>
+    </div>
+    <input type="file" id="impFile" accept="application/json,.json" class="hidden">
+    <div class="foot" id="backupInfo">Los datos se guardan solo en este teléfono.</div>
+
+    <div class="label" style="padding-left:6px">Instalar en el iPhone</div>
+    <div class="list"><div class="li" style="display:block;font-size:14px">En <b>Safari</b>, toque <b>Compartir</b> y luego <b>Agregar a pantalla de inicio</b>.</div></div>
+    <div class="foot">Esta app es un cuaderno de registro. La orientación sigue las reglas publicadas del método de la ovulación y no sustituye a una instructora acreditada.</div>
+  </section>
+</main>
+
+<nav class="noprint" id="nav">
+  <button data-v="hoy" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>Hoy</button>
+  <button data-v="cal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="17" rx="4"/><path d="M3 10h18M8 2v4M16 2v4"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/><circle cx="16" cy="15" r="1" fill="currentColor"/></svg>Calendario</button>
+  <button data-v="graf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="12" width="4" height="8" rx="1"/><rect x="10" y="7" width="4" height="13" rx="1"/><rect x="17" y="4" width="4" height="16" rx="1"/></svg>Gráfica</button>
+  <button data-v="guia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg>Guía</button>
+  <button data-v="ajus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Ajustes</button>
+</nav>
+<div class="toast" id="toast"></div>
+<div id="sheetRoot"></div>
+
+<script>
+"use strict";
+/* ---------- Vocabulario ---------- */
+const B = [ {k:'no', t:'No'}, {k:'man', t:'Manchado', h:'Unas gotas'}, {k:'esc', t:'Escaso'}, {k:'mod', t:'Moderado'}, {k:'abu', t:'Abundante'}];
+const S = [ {k:'seca', t:'Seca', h:'No sintió nada', f:0}, {k:'peg', t:'Pegajosa', h:'Algo pegajoso, no mojado', f:1}, {k:'hum', t:'Húmeda', h:'Un poco de humedad', f:2}, {k:'moj', t:'Mojada', h:'Se siente mojado', f:3}, {k:'res', t:'Resbalosa', h:'Lubricada, se desliza', f:4}];
+const A = [ {k:'nada', t:'Nada', h:'No vio secreción', f:0}, {k:'opa', t:'Opaco', h:'Blanco o amarillento, espeso', f:1}, {k:'cre', t:'Cremoso', h:'Como crema o loción', f:2}, {k:'tra', t:'Transparente', h:'Como agua o clara de huevo', f:3}, {k:'hil', t:'Elástico', h:'Se estira en hilos', f:4}];
+const lbl = (arr,k)=> (arr.find(x=>x.k===k)||{}).t||'';
+const BABY = '<svg viewBox="0 0 40 40"><circle cx="20" cy="13" r="7" fill="#f6d3bd" stroke="#c94d77" stroke-width="1.5"/><path d="M8 34c0-7 5.4-12 12-12s12 5 12 12z" fill="#fde8ef" stroke="#c94d77" stroke-width="1.5"/><circle cx="17.5" cy="12.5" r="1" fill="#5a4040"/><circle cx="22.5" cy="12.5" r="1" fill="#5a4040"/><path d="M17.5 16q2.5 2 5 0" stroke="#5a4040" fill="none" stroke-width="1"/></svg>';
+
+/* ---------- Almacenamiento ---------- */
+const KEY = 'cicloNatural.v1';
+const blank = ()=>({days:{}, ov:{peak:{}, start:{}}, meta:{}, set:{name:'', goal:'registro', guide:'1', bip:'seco', bipS:'peg', bipA:'opa', bipCS:['seca','peg'], bipCA:['nada','opa'], sit:'normal', bipDate:'', par:{}}});
+let DB = blank();
+let READER = false;
+function load(){
+  try{ const r = localStorage.getItem(KEY); if(r){ const o = JSON.parse(r); DB = Object.assign(blank(), o); DB.ov = Object.assign({peak:{},start:{}}, o.ov||{}); DB.set = Object.assign(blank().set, o.set||{}); } }catch(e){}
+}
+function save(){ if(READER) return; DB.meta=Object.assign({},DB.meta||{},{updatedAt:new Date().toISOString()}); try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(e){ toast('No se pudo guardar en el teléfono'); } idbPut(JSON.stringify(DB)); }
+
+/* ---------- Fechas ---------- */
+const iso = d => { const z=new Date(d.getTime()-d.getTimezoneOffset()*60000); return z.toISOString().slice(0,10); };
+const parse = s => { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); };
+const addDays = (s,n)=>{ const d=parse(s); d.setDate(d.getDate()+n); return iso(d); };
+const today = ()=> iso(new Date());
+const MES = ['ene','feb','mar','abr','may','jun','jul','ago','set','oct','nov','dic'];
+const DIA = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+const fmtShort = s => { const d=parse(s); return d.getDate()+' '+MES[d.getMonth()]; };
+const fmtLong = s => { const d=parse(s); return DIA[d.getDay()]+' '+d.getDate()+' '+MES[d.getMonth()]; };
+
+/* ---------- Parámetros ajustables ---------- */
+const PAR_DEF = {wait:3, post:3, peakSens:'res', peakAspect:0, luteMax:16, newCycle:20, rule1:'abu'};
+const PAR = ()=> Object.assign({}, PAR_DEF, DB.set.par||{});
+/* ---------- Motor de reglas ---------- */
+const isBleed = e => e && ['esc','mod','abu'].includes(e.b);
+const isSpot  = e => e && e.b==='man';
+const isDry   = e => e && (e.s||'seca')==='seca' && (e.a||'nada')==='nada' && !isBleed(e) && !isSpot(e);
+const wetSlip = e => e && (e.s==='moj' || e.s==='res');
+function matchesBIP(e){
+  if(!e) return false;
+  if(e.pbi===true) return true;
+  if(e.pbi===false) return false;
+  if(isBleed(e)||isSpot(e)) return false;
+  if(wetSlip(e) || e.a==='tra' || e.a==='hil') return false;   // nunca forman parte del PBI
+  const st = DB.set, s=(e.s||'seca'), a=(e.a||'nada');
+  if(st.bip==='aprendiendo' || st.bip==='ninguno') return false;
+  if(isDry(e)) return true;   // seco siempre es al menos tan infértil como el PBI
+  if(st.bip==='flujo') return s===st.bipS && a===st.bipA;
+  if(st.bip==='combinado') return (st.bipCS||[]).includes(s) && (st.bipCA||[]).includes(a);
+  return false;
+}
+
+function computeAll(){
+  const keys = Object.keys(DB.days).sort();
+  if(!keys.length) return {cycles:[], info:{}};
+  // rango continuo
+  const first = keys[0], last = keys[keys.length-1] > today() ? keys[keys.length-1] : today();
+  const all = []; for(let d=first; d<=last; d=addDays(d,1)) all.push(d);
+  // ciclos
+  const cycles = []; let cur = null; let peakSeen = false; let lastStartIdx = -99;
+  all.forEach((d,i)=>{
+    const e = DB.days[d], prev = DB.days[all[i-1]];
+    let start = false;
+    if(DB.ov.start[d]===true) start = true;
+    else if(DB.ov.start[d]===false) start = false;
+    else if(isBleed(e) && !isBleed(prev) && (cur===null || peakSeen || i-lastStartIdx>=PAR().newCycle)) start = true;
+    if(i===0 && !start){ cur = {start:d, days:[], partial:true}; cycles.push(cur); }
+    if(start){ cur = {start:d, days:[]}; cycles.push(cur); peakSeen=false; lastStartIdx=i; }
+    cur.days.push(d);
+    if(wetSlip(e) && e.s==='res') peakSeen = true; // aproximado para cortar ciclos
+  });
+  const info = {};
+  cycles.forEach(c=> analyzeCycle(c, info));
+  return {cycles, info};
+}
+
+function analyzeCycle(c, info){
+  const ds = c.days, E = ds.map(d=>DB.days[d]);
+  const forced = ds.findIndex(d=>DB.ov.peak[d]===true);
+  const pr = PAR();
+  const peakSign = e => !!e && (e.s==='res' || (pr.peakSens==='res_moj' && e.s==='moj') || (pr.peakAspect && (e.a==='tra'||e.a==='hil')));
+  const fertileSign = e => !!e && (wetSlip(e) || peakSign(e));
+  // Detección de Cúspide: último día resbaloso seguido de cambio a ni mojada ni resbalosa
+  let peaks = [];
+  if(forced>=0){ peaks=[forced]; }
+  else{
+    for(let i=0;i<ds.length;i++){
+      const e=E[i];
+      if(!peakSign(e)) continue;
+      if(DB.ov.peak[ds[i]]===false) continue;
+      const n=E[i+1];
+      if(!n) continue;                        // aún no se sabe
+      if(fertileSign(n) || isBleed(n)) continue;  // no hay cambio
+      // Meta-regla C: si vuelve mojada/resbalosa en días 1-3, se anula
+      let cancel=false;
+      for(let k=1;k<=pr.post;k++){ if(fertileSign(E[i+k])){cancel=true;break;} }
+      peaks.push({i, cancel});
+    }
+    const valid = peaks.filter(p=>!p.cancel);
+    peaks = valid.length ? [valid[valid.length-1].i] : [];
+  }
+  const P = peaks.length? peaks[0] : -1;
+  c.peak = P>=0 ? ds[P] : null;
+  // Recorrido para sellos
+  let menses = true;          // al inicio del ciclo
+  let wait = 0;               // días de espera tras un cambio (regla 3)
+  let changed = false;
+  let prevI = false;
+  for(let i=0;i<ds.length;i++){
+    const d=ds[i], e=E[i];
+    const r = {d, e, cd:i+1, color:'none', num:null, x:false, level:0, phase:'', rule:''};
+    if(!e){ r.color='none'; r.phase='Sin registro'; info[d]=r; menses=false; prevI=false; continue; }
+    const bleed=isBleed(e), spot=isSpot(e);
+    if(!bleed && !spot) menses=false;
+    if(P>=0 && i===P){
+      r.color='white'; r.x=true; r.level=4; r.phase='Cúspide';
+      r.rule='Día más fértil. Regla de la Cúspide: esperar hasta el '+(pr.post+1)+'.º día después.';
+    } else if(P>=0 && i>P){
+      const k=i-P;
+      if(bleed){ r.color='red'; r.phase = k>=10?'Menstruación':'Sangrado'; }
+      else if(spot){ r.color='spot'; r.phase='Manchado'; }
+      else r.color = isDry(e)?'green':'yellow';
+      if(k<=pr.post){ r.num=k; r.level=3; r.phase='Día '+k+' después de la Cúspide'; r.rule='Posiblemente fértil. Esperar.'; }
+      else if(k>pr.luteMax && !bleed){ r.level=2; r.phase='Fase lútea larga (día '+k+')'; r.rule='Pasaron más de '+pr.luteMax+' días desde la Cúspide sin regla: vuelva a las reglas 2 y 3 y consulte con su instructora (podría ser embarazo o una Cúspide mal identificada).'; }
+      else { r.level=1; if(!r.phase) r.phase='Fase post-ovulatoria'; r.rule='Regla de la Cúspide: disponible a cualquier hora hasta la siguiente menstruación.'; }
+    } else {
+      // pre-Cúspide
+      if(spot && menses){ r.color='spot'; r.level=2; r.phase='Final de la menstruación'; r.rule='Manchado al final de la menstruación: observe con atención.'; }
+      else if(bleed && menses){ const heavy = e.b==='abu' || (pr.rule1==='mod' && e.b==='mod'); r.color='red'; r.level= heavy?3:2; r.phase='Menstruación'; r.rule = heavy ? 'Regla 1: evitar las relaciones en días de sangrado '+(pr.rule1==='mod'?'moderado o abundante':'abundante')+'.' : 'Sangrado leve: puede ocultar el moco. Observe con atención.'; }
+      else if(matchesBIP(e)){
+        r.color = isDry(e)?'green':'yellow';
+        if(changed){ wait++; r.num=wait; r.level=2; r.phase='Espera '+wait+' (vuelta al PBI)'; r.rule='Regla 3: tras un cambio, contar '+pr.wait+' días de PBI; disponible la noche del día '+(pr.wait+1)+'.'; if(wait>=pr.wait){changed=false;} }
+        else { r.level=1; r.phase='Patrón Básico Infértil'; r.rule = prevI ? 'Regla 2: noches alternas. Hubo relación ayer: esperar a mañana en la noche.' : 'Regla 2: disponible en la noche, en noches alternas.'; }
+      } else if(isDry(e) && (DB.set.bip==='aprendiendo' || DB.set.bip==='ninguno')){
+        r.color='green'; r.level=2;
+        if(DB.set.bip==='aprendiendo'){ r.phase='Seco (aprendiendo)'; r.rule='Etapa de aprendizaje: se recomienda observar sin relaciones de 2 a 4 semanas para conocer su patrón.'; }
+        else { r.phase='Seco (sin PBI)'; r.rule='Sin PBI definido: los días antes de la Cúspide se consideran posiblemente fértiles.'; }
+      } else {
+        r.color = bleed?'red': spot?'spot':'white';
+        changed=true; wait=0; r.level=3;
+        r.phase = bleed?'Sangrado (cambio)': spot?'Manchado (cambio)':'Cambio del PBI';
+        r.rule='Regla 3: cambio del PBI, esperar y observar.';
+      }
+    }
+    r.warn = !!(e.i && DB.set.goal==='posponer' && (r.level>=2));
+    prevI = !!e.i;
+    info[d]=r;
+  }
+}
+
+
+
+/* ---------- Sellos ---------- */
+function stampHTML(r, big){
+  if(!r || !r.e) return `<div class="stamp st-none${big?' big':''}">${big?'':''}</div>`;
+  const cls = {red:'st-red', spot:'st-spot', green:'st-green', yellow:'st-yellow', white:'st-white', none:'st-none'}[r.color];
+  let inner = '';
+  if(r.color==='white') inner = BABY;
+  if(r.x) inner += '<span class="x">✕</span>';
+  if(r.num) inner += `<span class="num">${r.num}</span>`;
+  if(r.e.i) inner += '<span class="i">I</span>';
+  if(r.warn) inner += '<span class="warn">⚠️</span>';
+  return `<div class="stamp ${cls}${big?' big':''}">${inner}</div>`;
+}
+const shortTxt = e => { if(!e) return ''; const p=[]; if(e.b && e.b!=='no') p.push(lbl(B,e.b)); if(e.s) p.push(lbl(S,e.s)); if(e.a && e.a!=='nada') p.push(lbl(A,e.a)); return p.join(' · '); };
+
+/* ---------- Estado UI ---------- */
+let curDate = today(), view = 'hoy', chartMode = 'sellos';
+let RES = {cycles:[], info:{}};
+const $ = id=>document.getElementById(id);
+function toast(t){ const el=$('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('show'),1400); }
+function recompute(){ RES = computeAll(); }
+
+/* Hoja inferior reutilizable */
+function sheet(html, actions){
+  return new Promise(res=>{
+    const root=$('sheetRoot');
+    root.innerHTML=`<div class="sheet-bg"><div class="sheet"><div class="grab"></div>${html}<div id="shActs"></div></div></div>`;
+    const acts=root.querySelector('#shActs');
+    actions.forEach(a=>{ const b=document.createElement('button'); b.className='act '+(a.cls||''); b.textContent=a.t; b.onclick=async()=>{ if(a.keep){ await a.fn(); return; } root.innerHTML=''; res(a.v); if(a.fn) a.fn(); }; acts.appendChild(b); });
+    root.querySelector('.sheet-bg').onclick=e=>{ if(e.target.classList.contains('sheet-bg')){ root.innerHTML=''; res(null); } };
+  });
+}
+const ask = (msg, okText='Aceptar') => sheet(`<div style="font-size:16px;margin:4px 0 10px">${msg}</div>`, [{t:okText, v:true, cls:'main'},{t:'Cancelar', v:false, cls:'plain'}]);
+
+function setEntry(patch, quiet){
+  if(READER) return;
+  const e = Object.assign({b:'no', s:'seca', a:'nada', i:false, n:''}, DB.days[curDate]||{}, patch);
+  DB.days[curDate] = e; save(); recompute(); renderAll();
+  if(!quiet) flashSaved();
+}
+function flashSaved(){ $('savedTxt').textContent='✓ Guardado'; clearTimeout(flashSaved._t); flashSaved._t=setTimeout(()=>$('savedTxt').textContent='',1500); }
+
+function buildChips(id, arr, field){
+  const g=$(id); g.innerHTML='';
+  arr.forEach(o=>{ const b=document.createElement('button'); b.className='tile'; b.dataset.k=o.k;
+    const lv = o.f!==undefined ? `<span class="lv">${[1,2,3,4].map(n=>`<i class="${n<=o.f?'f':''}"></i>`).join('')}</span>` : '';
+    b.innerHTML = `${lv}<b>${o.t}</b>${o.h&&field!=='b'?`<small>${o.h}</small>`:''}`;
+    b.onclick=()=>setEntry({[field]:o.k}); g.appendChild(b); });
+}
+function buildQuick(){
+  const Q = [
+    {t:'Seca', c:'var(--green)', p:{b:'no',s:'seca',a:'nada',pbi:null}},
+    {t:'Igual que ayer', c:'var(--gray)', f:()=>{ const y=DB.days[addDays(curDate,-1)]; if(!y){toast('No hay registro de ayer');return;} setEntry({b:y.b,s:y.s,a:y.a,pbi:y.pbi}); }},
+    {t:'Menstruación', c:'var(--red)', p:{b:'mod',s:'moj',a:'nada',pbi:null}},
+    {t:'Mi PBI', c:'var(--yellow)', f:()=>{ const st=DB.set; if(st.bip==='aprendiendo'||st.bip==='ninguno'){ toast('Primero defina su PBI en Ajustes'); return; } setEntry(st.bip==='flujo'?{b:'no',s:st.bipS,a:st.bipA,pbi:true}:{b:'no',s:'seca',a:'nada',pbi:true}); }},
+    {t:'Pegajosa', c:'#fff', p:{b:'no',s:'peg',a:'opa',pbi:null}},
+    {t:'Resbalosa', c:'#fff', p:{b:'no',s:'res',a:'hil',pbi:null}},
+  ];
+  const q=$('quick'); q.innerHTML='';
+  Q.forEach(o=>{ const b=document.createElement('button'); b.className='chip'; b.innerHTML=`<span class="dot" style="background:${o.c}"></span>${o.t}`; b.onclick=()=>{ o.f?o.f():setEntry(o.p); }; q.appendChild(b); });
+}
+
+/* ---------- Render ---------- */
+function renderHoy(){
+  const isToday = curDate===today();
+  const yest = curDate===addDays(today(),-1);
+  $('dayTitle').textContent = isToday?'Hoy': yest?'Ayer': fmtLong(curDate);
+  const cyc = RES.cycles.find(c=>c.days.includes(curDate));
+  const cd = cyc ? cyc.days.indexOf(curDate)+1 : null;
+  $('daySub').textContent = (isToday||yest? fmtLong(curDate):'') + (cd? ((isToday||yest)?' · ':'')+'Día '+cd+' del ciclo':'');
+  $('datePick').value = curDate;
+  $('nextDay').style.visibility = curDate>=today() ? 'hidden':'visible';
+  const e = DB.days[curDate];
+  [['g-b','b'],['g-s','s'],['g-a','a']].forEach(([id,f])=>{ [...$(id).children].forEach(btn=> btn.classList.toggle('on', !!e && e[f]===btn.dataset.k)); });
+  $('t-i').classList.toggle('on', !!(e&&e.i)); $('t-i0').classList.toggle('on', !!(e&&!e.i));
+  $('t-pbi').classList.toggle('on', !!(e&&e.pbi===true));
+  $('t-chg').classList.toggle('on', !!(e&&e.pbi===false));
+  const hasNote = !!(e && e.n);
+  if(document.activeElement!==$('nota')){ $('nota').value = e?(e.n||''):''; $('nota').classList.toggle('hidden', !hasNote); $('noteToggle').classList.toggle('hidden', hasNote); }
+  $('delDay').classList.toggle('hidden', !e);
+  const r = RES.info[curDate];
+  $('stBig').innerHTML = stampHTML(r, true);
+  const st=DB.set; let al='';
+  if(st.bip==='aprendiendo') al='<b>Defina su PBI</b> en Ajustes cuando lo conozca, para que la app aplique las reglas.';
+  else if(st.sit!=='normal' && st.bipDate){ const pc=RES.cycles.find(c=>c.peak && c.peak>st.bipDate); if(pc) al='<b>Volvió la fertilidad.</b> Hubo una Cúspide el '+fmtShort(pc.peak)+': el PBI anterior ya no aplica. Revíselo en Ajustes.'; }
+  if(!al){ const nd=Object.keys(DB.days).length, lb=daysSince((DB.meta||{}).lastBackup); if(nd>=14 && (lb===null || lb>30)) al='<b>Guarde un respaldo.</b> '+(lb===null?'Aún no ha exportado ninguno':'El último fue hace '+lb+' días')+'. <button class="link" data-go2="ajus" style="padding:0">Ir a Ajustes ›</button>'; }
+  $('bipAlert').innerHTML=al; const g2=$('bipAlert').querySelector('[data-go2]'); if(g2) g2.onclick=()=>show('ajus'); $('bipAlert').classList.toggle('hidden', !al || READER);
+  if(!e){
+    $('stTitle').textContent = isToday?'¿Cómo se sintió hoy?':'Sin registro';
+    $('stDesc').textContent = 'Elija un registro rápido o marque abajo.';
+    $('stRule').classList.add('hidden');
+  } else {
+    $('stTitle').textContent = r.phase;
+    $('stDesc').textContent = shortTxt(e);
+    const g = DB.set.guide==='1' && DB.set.goal!=='registro';
+    if(g){
+      let rule = DB.set.goal==='lograr'
+        ? (r.level>=3 && !isBleed(e) ? 'Días de mayor probabilidad de embarazo.' : 'Espere la sensación resbalosa.')
+        : r.rule;
+      $('stRule').innerHTML = rule + '<small>Orientativo. Confirme con su instructora.</small>';
+      $('stRule').classList.remove('hidden');
+    } else $('stRule').classList.add('hidden');
+  }
+}
+
+function legendHTML(){
+  const L=[['red','Sangrado'],['spot','Manchado'],['green','Seco'],['yellow','PBI de flujo o combinado'],['white','Cambio, posible fertilidad']];
+  let h = L.map(([c,t])=>`<div>${stampHTML({e:{},color:c})}${t}</div>`).join('');
+  h += `<div>${stampHTML({e:{},color:'white',x:true})}Cúspide</div>`;
+  h += `<div>${stampHTML({e:{},color:'green',num:1})}Conteo 1-2-3</div>`;
+  h += `<div>${stampHTML({e:{i:true},color:'green'})}Relación</div>`;
+  return h;
+}
+
+function renderChart(){
+  $('grafTitle').textContent = DB.set.name ? 'Gráfica de '+DB.set.name : 'Gráfica';
+  const cur = RES.cycles.find(c=>c.days.includes(today()));
+  const full = RES.cycles.filter(c=>!c.partial && c!==cur);
+  const avg = full.length ? Math.round(full.reduce((a,c)=>a+c.days.length,0)/full.length) : null;
+  const lastPeak = [...RES.cycles].reverse().find(c=>c.peak);
+  $('summary').innerHTML = `<div><b>${cur? cur.days.indexOf(today())+1 : '–'}</b><span>Día del ciclo</span></div><div><b>${avg||'–'}</b><span>Duración promedio</span></div><div><b>${lastPeak? lastPeak.days.indexOf(lastPeak.peak)+1 : '–'}</b><span>Última Cúspide (día)</span></div>`;
+  const box=$('chart'); box.innerHTML='';
+  if(!RES.cycles.length){ box.innerHTML='<div class="card" style="text-align:center;color:var(--muted)">Aún no hay registros.<br>Empiece en la pestaña Hoy.</div>'; $('legend').innerHTML=legendHTML(); return; }
+  [...RES.cycles].reverse().forEach((c,idx)=>{
+    const n = RES.cycles.length-idx;
+    const el=document.createElement('div'); el.className='card';
+    const pi = c.peak ? c.days.indexOf(c.peak)+1 : null;
+    el.innerHTML = `<div class="cyc-h"><b>Ciclo ${n}${c===cur?' · actual':''}</b><span>${fmtShort(c.start)} · ${c.days.length} días${pi?' · Cúspide día '+pi:''}</span></div>`;
+    const strip=document.createElement('div'); strip.className='strip';
+    let rd='',rn='',rs='',rt='';
+    c.days.forEach((d,i)=>{
+      const r=RES.info[d]; const t = d===today()?' class="today"':'';
+      rd+=`<td${t} data-d="${d}">${fmtShort(d)}</td>`;
+      rn+=`<td${t} data-d="${d}">${i+1}</td>`;
+      if(chartMode==='sellos') rs+=`<td${t} data-d="${d}">${stampHTML(r)}</td>`;
+      else{
+        const h=[0,18,38,58,78][r.level||0]; const col={red:'var(--red)',spot:'var(--red)',green:'var(--green)',yellow:'var(--yellow)',white:'var(--pink-mid)',none:'transparent'}[r.color];
+        rs+=`<td${t} data-d="${d}"><div class="bar" style="height:${h}px;background:${col}">${r.x?'✕':(r.num||'')}</div></td>`;
+      }
+      rt+=`<td${t} data-d="${d}">${shortTxt(r.e)}</td>`;
+    });
+    strip.innerHTML=`<table><tr class="r-date">${rd}</tr><tr class="r-day">${rn}</tr><tr class="r-st${chartMode==='barras'?' bars':''}">${rs}</tr><tr class="r-txt">${rt}</tr></table>`;
+    strip.addEventListener('click',ev=>{ const td=ev.target.closest('td[data-d]'); if(td) dayDetail(td.dataset.d, c); });
+    el.appendChild(strip);
+    box.appendChild(el);
+    if(c===cur || idx===0) requestAnimationFrame(()=>{ strip.scrollLeft = strip.scrollWidth; });
+  });
+  $('legend').innerHTML = legendHTML();
+}
+
+function dayDetail(d, c){
+  const r = RES.info[d], e = DB.days[d];
+  const html = `<div class="hero" style="margin-bottom:8px">${stampHTML(r,true)}<div><div class="t">${fmtLong(d)} · día ${c.days.indexOf(d)+1}</div><div class="d">${e? r.phase+'<br>'+shortTxt(e):'Sin registro'}${e&&e.n?'<br><i>'+e.n.replace(/</g,'&lt;')+'</i>':''}</div></div></div>`;
+  const acts = [];
+  if(!READER){
+    acts.push({t: e?'Editar este día':'Registrar este día', cls:'main', fn:()=>{ curDate=d; show('hoy'); }});
+    if(e){
+      if(c.peak===d) acts.push({t:'Quitar Cúspide', fn:()=>{ c.days.forEach(x=>{ if(DB.ov.peak[x]===true) delete DB.ov.peak[x]; }); DB.ov.peak[d]=false; save(); recompute(); renderAll(); toast('Cúspide quitada'); }});
+      else acts.push({t:'Marcar como Cúspide', fn:()=>{ c.days.forEach(x=>delete DB.ov.peak[x]); DB.ov.peak[d]=true; save(); recompute(); renderAll(); toast('Cúspide marcada'); }});
+    }
+    if(c.start!==d) acts.push({t:'Empezar ciclo nuevo aquí', fn:()=>{ DB.ov.start[d]=true; save(); recompute(); renderAll(); toast('Ciclo nuevo'); }});
+    else if(DB.ov.start[d]===true) acts.push({t:'Quitar inicio de ciclo', fn:()=>{ delete DB.ov.start[d]; save(); recompute(); renderAll(); }});
+  }
+  acts.push({t:'Cerrar', cls:'plain'});
+  sheet(html, acts);
+}
+
+function renderAjustes(){
+  const st=DB.set;
+  $('sName').value=st.name; $('sGoal').value=st.goal; $('sGuide').value=st.guide; $('sSit').value=st.sit;
+  renderBip(); renderPar();
+  const lb=(DB.meta||{}).lastBackup; $('backupInfo').textContent='Los datos se guardan en este teléfono (doble copia). '+(lb?'Último respaldo: '+fmtLong(lb)+'.':'Aún no ha exportado un respaldo.');
+}
+const BIP_OPTS = [
+  {k:'seco', t:'Seco', d:'Después de la regla no siente nada y no ve nada, día tras día. Es el más común en ciclos regulares.'},
+  {k:'flujo', t:'Flujo sin cambios', d:'Todos los días la misma secreción, igual en sensación y aspecto (por ejemplo, pegajosa y opaca).'},
+  {k:'combinado', t:'Combinado', d:'Mezcla constante de días secos y una misma secreción que nunca llega a mojada ni resbalosa. Frecuente en lactancia, después de anticonceptivos, ciclos largos o premenopausia.'},
+  {k:'ninguno', t:'Sin PBI (ciclos cortos)', d:'El moco empieza apenas termina la regla. No hay días infértiles antes de la ovulación.'},
+  {k:'aprendiendo', t:'Todavía lo estoy aprendiendo', d:'Primeras semanas: solo observe y anote. La app no marca días infértiles antes de la Cúspide.'},
+];
+const SIT_TIP = {
+  normal:'En ciclos regulares el PBI suele ser seco o de flujo sin cambios.',
+  lactancia:'Durante la lactancia puede haber semanas o meses de PBI, muchas veces combinado. Cuando aparezca una Cúspide, ese PBI deja de valer y se define uno nuevo.',
+  postanti:'Después de dejar anticonceptivos hormonales los primeros ciclos pueden ser largos o irregulares. El PBI suele ser combinado. Cuando aparezca una Cúspide, revise su PBI.',
+  largos:'En ciclos largos puede haber muchos días de PBI. Si es una mezcla constante, elija «Combinado».',
+  premeno:'En la premenopausia es común un flujo continuo sin cambios o un patrón combinado. Su instructora le ayuda a definirlo.'
+};
+function multiChips(id, arr, keys, field){
+  const g=$(id); g.innerHTML='';
+  arr.filter(o=>keys.includes(o.k)).forEach(o=>{ const b=document.createElement('button'); b.className='chip'+((DB.set[field]||[]).includes(o.k)?' on':''); b.textContent=o.t;
+    b.onclick=()=>{ const l=new Set(DB.set[field]||[]); l.has(o.k)?l.delete(o.k):l.add(o.k); DB.set[field]=[...l]; bipChanged(); }; g.appendChild(b); });
+}
+function singleChips(id, arr, keys, field){
+  const g=$(id); g.innerHTML='';
+  arr.filter(o=>keys.includes(o.k)).forEach(o=>{ const b=document.createElement('button'); b.className='chip'+(DB.set[field]===o.k?' on':''); b.textContent=o.t;
+    b.onclick=()=>{ DB.set[field]=o.k; bipChanged(); }; g.appendChild(b); });
+}
+function bipChanged(){ DB.set.bipDate=today(); save(); recompute(); renderBip(); }
+function renderBip(){
+  const st=DB.set, box=$('bipOpts'); box.innerHTML='';
+  BIP_OPTS.forEach(o=>{ const b=document.createElement('button'); b.className='opt'+(st.bip===o.k?' on':''); b.innerHTML=`<span class="rd"></span><div><b>${o.t}</b><span>${o.d}</span></div>`; b.onclick=()=>{ st.bip=o.k; bipChanged(); }; box.appendChild(b); });
+  $('bipFlujoBox').classList.toggle('hidden', st.bip!=='flujo');
+  $('bipCombBox').classList.toggle('hidden', st.bip!=='combinado');
+  singleChips('bf-s', S, ['peg','hum'], 'bipS');
+  singleChips('bf-a', A, ['nada','opa','cre'], 'bipA');
+  multiChips('bc-s', S, ['seca','peg','hum'], 'bipCS');
+  multiChips('bc-a', A, ['nada','opa','cre'], 'bipCA');
+  $('sitTip').textContent = SIT_TIP[st.sit]||'';
+  const sg = suggestBIP();
+  const same = sg && sg.bip===st.bip && (sg.bip!=='flujo' || (sg.bipS===st.bipS && sg.bipA===st.bipA));
+  $('bipSug').innerHTML = sg && !same ? `<div class="sug">Según su último ciclo completo, su patrón parece <b>${sg.txt}</b>.<br><button id="useSug">Usar esta sugerencia</button></div>` : '';
+  if(sg && !same) $('useSug').onclick=()=>{ Object.assign(st, sg.patch); bipChanged(); toast('PBI actualizado'); };
+}
+/* Sugerencia: mira los días entre el fin de la regla y el primer signo fértil del último ciclo con Cúspide */
+function suggestBIP(){
+  const c = [...RES.cycles].reverse().find(c=>c.peak && !c.partial);
+  if(!c) return null;
+  const pk = c.days.indexOf(c.peak); let i=0;
+  while(i<pk && (isBleed(DB.days[c.days[i]])||isSpot(DB.days[c.days[i]]))) i++;
+  const run=[];
+  for(; i<pk; i++){ const e=DB.days[c.days[i]]; if(!e || wetSlip(e) || e.a==='tra' || e.a==='hil' || isBleed(e) || isSpot(e)) break; run.push(e); }
+  // quitar el inicio del patrón en desarrollo: descripciones al final que no se habían visto antes
+  const key=e=>(e.s||'seca')+'|'+(e.a||'nada');
+  while(run.length>1){ const k=key(run[run.length-1]); if(run.slice(0,-1).some(e=>key(e)===k)) break; run.pop(); }
+  if(run.length<3) return {bip:'ninguno', txt:'sin PBI (el moco empezó casi enseguida)', patch:{bip:'ninguno'}};
+  const dry = run.filter(isDry), wet = run.filter(e=>!isDry(e));
+  const kinds = new Set(wet.map(e=>e.s+'|'+e.a));
+  if(!wet.length) return {bip:'seco', txt:'seco', patch:{bip:'seco'}};
+  if(!dry.length && kinds.size===1){ const e=wet[0]; return {bip:'flujo', bipS:e.s, bipA:e.a, txt:'flujo sin cambios ('+lbl(S,e.s).toLowerCase()+', '+lbl(A,e.a).toLowerCase()+')', patch:{bip:'flujo', bipS:e.s, bipA:e.a}}; }
+  const cs=[...new Set(run.map(e=>e.s||'seca'))], ca=[...new Set(run.map(e=>e.a||'nada'))];
+  return {bip:'combinado', txt:'combinado ('+cs.map(k=>lbl(S,k).toLowerCase()).join(', ')+' / '+ca.map(k=>lbl(A,k).toLowerCase()).join(', ')+')', patch:{bip:'combinado', bipCS:cs, bipCA:ca}};
+}
+/* ---------- Calendario mensual ---------- */
+let calMonth = today().slice(0,7);
+const MESL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre'];
+function monthAdd(ym, n){ const [y,m]=ym.split('-').map(Number); const d=new Date(y,m-1+n,1); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); }
+function monthDays(ym){
+  const [y,m]=ym.split('-').map(Number); const first=new Date(y,m-1,1); const lead=(first.getDay()+6)%7; // lunes primero
+  const n=new Date(y,m,0).getDate(); const cells=[];
+  for(let i=0;i<lead;i++) cells.push(null);
+  for(let d=1; d<=n; d++) cells.push(ym+'-'+String(d).padStart(2,'0'));
+  while(cells.length%7) cells.push(null);
+  return cells;
+}
+function cycleOf(d){ return RES.cycles.find(c=>c.days.includes(d)); }
+function renderCal(){
+  const [y,m]=calMonth.split('-').map(Number);
+  $('calTitle').textContent = MESL[m-1]+' '+y;
+  $('calNext').style.visibility = calMonth>=today().slice(0,7)?'hidden':'visible';
+  const g=$('calGrid'); g.innerHTML='';
+  let rec=0, rel=0, peaks=[], starts=[];
+  monthDays(calMonth).forEach(d=>{
+    const cell=document.createElement('button'); cell.className='cal-d';
+    if(!d){ cell.className+=' empty'; cell.disabled=true; g.appendChild(cell); return; }
+    const r=RES.info[d], c=cycleOf(d), fut=d>today();
+    if(fut) cell.classList.add('fut'); if(d===today()) cell.classList.add('today');
+    if(r && r.e){ rec++; if(r.e.i) rel++; if(r.x) peaks.push(d); }
+    if(c && c.start===d) starts.push(d);
+    cell.innerHTML = `<span class="dn">${Number(d.slice(8))}</span>${r&&r.e?stampHTML(r):'<span class="ph"></span>'}<span class="cd">${c&&!fut?'d'+(c.days.indexOf(d)+1):''}</span>`;
+    if(!fut) cell.onclick=()=>{ if(c) dayDetail(d,c); else if(!READER){ curDate=d; show('hoy'); } };
+    g.appendChild(cell);
+  });
+  $('calSum').innerHTML = `<div><b>${rec}</b><span>Días anotados</span></div><div><b>${peaks.length?peaks.map(fmtShort).join(', '):'–'}</b><span>Cúspide</span></div><div><b>${starts.length?starts.map(fmtShort).join(', '):'–'}</b><span>Inicio de ciclo</span></div>`;
+}
+
+/* ---------- PDF ---------- */
+function loadJsPDF(){
+  if(window.jspdf) return Promise.resolve();
+  return new Promise((res,rej)=>{ const s=document.createElement('script'); s.src='jspdf.umd.min.js'; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+}
+const PC = {red:[209,64,74], green:[74,158,102], yellow:[238,196,67], pink:[224,102,143], pinkD:[201,77,119], soft:[253,232,239], ink:[58,42,49], muted:[154,133,144], line:[243,227,233], white:[255,255,255], gray:[205,195,200]};
+function pdfStamp(doc, x, y, s, r){
+  const rr=s*0.22;
+  if(!r || !r.e){ doc.setDrawColor(...PC.gray); doc.setLineDashPattern([0.6,0.6],0); doc.setLineWidth(0.25); doc.roundedRect(x,y,s,s,rr,rr,'S'); doc.setLineDashPattern([],0); return; }
+  const col = {red:PC.red, spot:PC.green, green:PC.green, yellow:PC.yellow, white:PC.white}[r.color]||PC.white;
+  doc.setFillColor(...col);
+  if(r.color==='white'){ doc.setDrawColor(...PC.pink); doc.setLineWidth(0.35); doc.roundedRect(x,y,s,s,rr,rr,'FD'); }
+  else doc.roundedRect(x,y,s,s,rr,rr,'F');
+  if(r.color==='spot'){ doc.setFillColor(...PC.red); for(let i=1;i<=3;i++) for(let j=1;j<=3;j++) doc.circle(x+i*s/4, y+j*s/4, s*0.06, 'F'); }
+  if(r.color==='white'){ // bebé simplificado
+    doc.setFillColor(...PC.soft); doc.setDrawColor(...PC.pinkD); doc.setLineWidth(0.25);
+    doc.circle(x+s/2, y+s*0.36, s*0.15, 'FD');
+    doc.ellipse(x+s/2, y+s*0.82, s*0.27, s*0.17, 'FD');
+  }
+  if(r.x){ doc.setDrawColor(...PC.red); doc.setLineWidth(s*0.1); doc.line(x+s*0.2,y+s*0.2,x+s*0.8,y+s*0.8); doc.line(x+s*0.8,y+s*0.2,x+s*0.2,y+s*0.8); }
+  if(r.num){ doc.setFont('helvetica','bold'); doc.setFontSize(s*2.2); doc.setTextColor(...(r.color==='yellow'?[74,58,0]:PC.white)); doc.text(String(r.num), x+s/2, y+s*0.68, {align:'center'}); }
+  if(r.e.i){ const w=s*0.42; doc.setFillColor(...PC.pinkD); doc.roundedRect(x+s-w*0.7, y+s-w*0.7, w, w, w*0.25, w*0.25, 'F'); doc.setFont('helvetica','bold'); doc.setFontSize(s*1.3); doc.setTextColor(...PC.white); doc.text('I', x+s-w*0.2, y+s+w*0.05, {align:'center'}); }
+}
+function abbrev(e){
+  if(!e) return '';
+  const p=[]; if(e.b&&e.b!=='no') p.push(lbl(B,e.b)); if(e.s&&e.s!=='seca') p.push(lbl(S,e.s)); else if(!e.b||e.b==='no') p.push('Seca');
+  if(e.a&&e.a!=='nada') p.push(lbl(A,e.a)); return p.join(' ');
+}
+async function makePDF(n){
+  toast('Preparando PDF…');
+  try{ await loadJsPDF(); }catch(e){ toast('No se pudo cargar el generador de PDF'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({orientation:'landscape', unit:'mm', format:'a4'});
+  const W=297, H=210, M=12;
+  const cycles = n ? RES.cycles.slice(-n) : RES.cycles.slice();
+  if(!cycles.length){ toast('No hay datos para el PDF'); return; }
+  const name = DB.set.name ? 'de '+DB.set.name : '';
+  const header = (title)=>{
+    doc.setFillColor(...PC.pink); doc.rect(0,0,W,22,'F');
+    doc.setTextColor(...PC.white); doc.setFont('helvetica','bold'); doc.setFontSize(17); doc.text(title, M, 14);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.text('Ciclo Natural · generado el '+fmtLong(today())+' '+today().slice(0,4), W-M, 14, {align:'right'});
+  };
+  const footer = ()=>{ doc.setFontSize(7); doc.setTextColor(...PC.muted); doc.text('Registro del método de la ovulación. La interpretación es orientativa y no sustituye a una instructora acreditada.', M, H-6); doc.text('Página '+doc.getNumberOfPages(), W-M, H-6, {align:'right'}); };
+
+  // ---- Página 1: resumen + gráficas ----
+  header('Gráfica del ciclo '+name);
+  const done = cycles.filter(c=>!c.partial && c!==RES.cycles[RES.cycles.length-1]);
+  const avg = a => a.length? Math.round(a.reduce((x,y)=>x+y,0)/a.length) : '–';
+  const lens = done.map(c=>c.days.length), pks = cycles.filter(c=>c.peak).map(c=>c.days.indexOf(c.peak)+1);
+  const lut = done.filter(c=>c.peak).map(c=>c.days.length-(c.days.indexOf(c.peak)+1));
+  const stats=[['Ciclos',cycles.length],['Duración promedio',avg(lens)+(lens.length?' días':'')],['Cúspide promedio',pks.length?'día '+avg(pks):'–'],['Fase post-Cúspide',lut.length?avg(lut)+' días':'–'],['PBI',({seco:'Seco',flujo:'Flujo sin cambios',combinado:'Combinado',ninguno:'Sin PBI',aprendiendo:'Aprendiendo'})[DB.set.bip]]];
+  const bw=(W-2*M-4*4)/5;
+  stats.forEach(([t,v],i)=>{ const x=M+i*(bw+4); doc.setFillColor(...PC.soft); doc.roundedRect(x,28,bw,17,3,3,'F'); doc.setTextColor(...PC.pinkD); doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.text(String(v), x+bw/2, 37, {align:'center'}); doc.setTextColor(...PC.muted); doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.text(t, x+bw/2, 42, {align:'center'}); });
+  // leyenda
+  const leg=[['red','Sangrado'],['spot','Manchado'],['green','Seco'],['yellow','PBI de flujo'],['white','Cambio / fértil'],['x','Cúspide'],['num','Conteo 1-2-3'],['i','Relación']];
+  let lx=M; doc.setFontSize(8);
+  leg.forEach(([c,t])=>{ const r = c==='x'?{e:{},color:'white',x:true}: c==='num'?{e:{},color:'green',num:1}: c==='i'?{e:{i:true},color:'green'}:{e:{},color:c}; pdfStamp(doc,lx,49,5,r); doc.setTextColor(...PC.ink); doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.text(t,lx+6.5,52.6); lx+=6.5+doc.getTextWidth(t)+6; });
+
+  let y=60; const per=31, cw=(W-2*M)/per, sz=Math.min(6.4,cw-1.4);
+  const blockH = 34;
+  [...cycles].reverse().forEach((c)=>{
+    const idx = RES.cycles.indexOf(c)+1;
+    for(let off=0; off<c.days.length; off+=per){
+      if(y+blockH>H-10){ footer(); doc.addPage(); header('Gráfica del ciclo '+name); y=30; }
+      const part = c.days.slice(off, off+per);
+      doc.setTextColor(...PC.ink); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+      if(off===0){ const pi=c.peak?c.days.indexOf(c.peak)+1:null; doc.text('Ciclo '+idx, M, y); doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...PC.muted); doc.text(fmtShort(c.start)+' '+c.start.slice(0,4)+' · '+c.days.length+' días'+(pi?' · Cúspide día '+pi:'')+(c.partial?' · parcial':''), M+18, y); }
+      else { doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...PC.muted); doc.text('Ciclo '+idx+' (continuación)', M, y); }
+      const y0=y+3;
+      doc.setFillColor(...PC.soft); doc.roundedRect(M-1, y0-1, part.length*cw+2, blockH-6, 2, 2, 'F');
+      part.forEach((d,i)=>{
+        const x=M+i*cw, r=RES.info[d];
+        doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...PC.muted);
+        doc.text(Number(d.slice(8))+'/'+Number(d.slice(5,7)), x+cw/2, y0+3, {align:'center'});
+        doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...PC.ink);
+        doc.text(String(off+i+1), x+cw/2, y0+6.5, {align:'center'});
+        pdfStamp(doc, x+(cw-sz)/2, y0+8, sz, r);
+        const t = abbrev(r&&r.e);
+        if(t){ doc.setFont('helvetica','normal'); doc.setFontSize(4.3); doc.setTextColor(...PC.muted); doc.text(doc.splitTextToSize(t, cw-0.8).slice(0,3), x+cw/2, y0+sz+10.5, {align:'center'}); }
+      });
+      y += blockH;
+    }
+  });
+  footer();
+
+  // ---- Páginas de calendario ----
+  const first = cycles[0].start.slice(0,7), last = (cycles[cycles.length-1].days.slice(-1)[0]).slice(0,7);
+  const months=[]; for(let ym=first; ym<=last; ym=monthAdd(ym,1)) months.push(ym);
+  for(let k=0;k<months.length;k+=2){
+    doc.addPage(); header('Calendario '+name);
+    months.slice(k,k+2).forEach((ym,j)=>{
+      const x0 = M + j*((W-2*M)/2+3), w=(W-2*M)/2-3, cw2=w/7;
+      const [yy,mm]=ym.split('-').map(Number);
+      doc.setTextColor(...PC.ink); doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.text(MESL[mm-1]+' '+yy, x0, 32);
+      ['L','M','K','J','V','S','D'].forEach((t,i)=>{ doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...PC.muted); doc.text(t, x0+i*cw2+cw2/2, 39, {align:'center'}); });
+      const cells=monthDays(ym), ch=Math.min(24,(H-60)/(cells.length/7));
+      cells.forEach((d,i)=>{
+        const cx=x0+(i%7)*cw2, cy=42+Math.floor(i/7)*ch;
+        if(!d) return;
+        doc.setDrawColor(...PC.line); doc.setLineWidth(0.3); doc.setFillColor(...(d===today()?PC.soft:PC.white)); doc.roundedRect(cx+0.6,cy+0.6,cw2-1.2,ch-1.2,2,2,'FD');
+        doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(...PC.ink); doc.text(String(Number(d.slice(8))), cx+2.2, cy+4.6);
+        const r=RES.info[d]; const c=cycleOf(d);
+        if(c && d<=today()){ doc.setFontSize(5.5); doc.setTextColor(...PC.muted); doc.text('d'+(c.days.indexOf(d)+1), cx+cw2-2, cy+4.4, {align:'right'}); }
+        if(r && r.e){ const s=Math.min(ch-11, cw2-10); pdfStamp(doc, cx+(cw2-s)/2, cy+6, s, r);
+          doc.setFont('helvetica','normal'); doc.setFontSize(4.6); doc.setTextColor(...PC.muted); doc.text(doc.splitTextToSize(abbrev(r.e), cw2-2).slice(0,1), cx+cw2/2, cy+ch-2.2, {align:'center'}); }
+      });
+    });
+    footer();
+  }
+
+  // ---- Notas ----
+  const notes = cycles.flatMap(c=>c.days).filter(d=>DB.days[d] && DB.days[d].n);
+  if(notes.length){
+    doc.addPage(); header('Notas '+name); let ny=32;
+    notes.forEach(d=>{ if(ny>H-14){ footer(); doc.addPage(); header('Notas '+name); ny=32; }
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...PC.pinkD); doc.text(fmtLong(d)+' '+d.slice(0,4), M, ny);
+      doc.setFont('helvetica','normal'); doc.setTextColor(...PC.ink); const lines=doc.splitTextToSize(DB.days[d].n, W-2*M-55); doc.text(lines, M+55, ny); ny+=Math.max(6, lines.length*4.2+2); });
+    footer();
+  }
+
+  const fname = 'ciclo-natural'+(DB.set.name?'-'+DB.set.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'):'')+'-'+today()+'.pdf';
+  const blob = doc.output('blob');
+  const file = new File([blob], fname, {type:'application/pdf'});
+  try{ if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:'Gráfica del ciclo'}); return; } }catch(e){ if(e && e.name==='AbortError') return; }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=fname; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000); toast('PDF descargado');
+}
+function pdfMenu(){
+  const nC = RES.cycles.length;
+  if(!nC){ toast('Aún no hay registros'); return; }
+  const acts=[{t:'Ciclo actual', cls:'main', fn:()=>makePDF(1)}];
+  if(nC>1) acts.push({t:'Últimos 3 ciclos', fn:()=>makePDF(3)});
+  if(nC>3) acts.push({t:'Últimos 6 ciclos', fn:()=>makePDF(6)});
+  acts.push({t:'Todo el registro ('+nC+' ciclos)', fn:()=>makePDF(0)});
+  acts.push({t:'Cancelar', cls:'plain'});
+  sheet('<div style="font-size:17px;font-weight:700;margin:2px 0 4px">Descargar PDF</div><div class="muted" style="font-size:14px;margin-bottom:6px">Incluye resumen, gráfica de sellos por ciclo, calendario mensual y notas.</div>', acts);
+}
+
+/* ---------- Guardado seguro (IndexedDB + respaldo) ---------- */
+function idb(){ return new Promise((res,rej)=>{ if(!window.indexedDB) return rej(); const r=indexedDB.open('cicloNatural',1); r.onupgradeneeded=()=>r.result.createObjectStore('kv'); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
+async function idbPut(v){ try{ const d=await idb(); d.transaction('kv','readwrite').objectStore('kv').put(v,'db'); }catch(e){} }
+async function idbGet(){ try{ const d=await idb(); return await new Promise(res=>{ const q=d.transaction('kv').objectStore('kv').get('db'); q.onsuccess=()=>res(q.result||null); q.onerror=()=>res(null); }); }catch(e){ return null; } }
+const daysSince = s => s ? Math.floor((parse(today())-parse(s))/86400000) : null;
+
+const PAR_UI = [
+  {k:'wait', t:'Días de espera tras un cambio', d:'Regla 3: días de PBI a contar antes de volver a la regla 2', min:1, max:5},
+  {k:'post', t:'Días a contar después de la Cúspide', d:'Regla de la Cúspide: 1, 2, 3', min:2, max:5},
+  {k:'luteMax', t:'Máximo de días hasta la regla', d:'Si pasa este número de días sin regla, se avisa', min:12, max:20},
+  {k:'newCycle', t:'Mínimo de días para ciclo nuevo', d:'Si no hubo Cúspide, un sangrado inicia ciclo solo después de estos días', min:10, max:40},
+  {k:'peakSens', t:'Sensación que marca la Cúspide', d:'Normalmente solo «resbalosa»', opts:[['res','Solo resbalosa'],['res_moj','Resbalosa o mojada']]},
+  {k:'peakAspect', t:'Usar también el aspecto', d:'Contar transparente o elástico como señal de Cúspide', opts:[['0','No'],['1','Sí']]},
+  {k:'rule1', t:'Sangrado para la regla 1', d:'Qué sangrado se considera para evitar relaciones', opts:[['abu','Abundante'],['mod','Moderado y abundante']]},
+];
+function renderPar(){
+  const pr=PAR(), box=$('parList'); box.innerHTML='';
+  PAR_UI.forEach(o=>{
+    const row=document.createElement('div'); row.className='li';
+    const changed = String(pr[o.k])!==String(PAR_DEF[o.k]);
+    row.innerHTML=`<span class="ld">${o.t}${changed?' <span style="color:var(--pink-d)">•</span>':''}<small>${o.d}</small></span>`;
+    if(o.opts){
+      const sel=document.createElement('select'); sel.innerHTML=o.opts.map(([v,t])=>`<option value="${v}">${t}</option>`).join(''); sel.value=String(pr[o.k]);
+      sel.onchange=()=>setPar(o.k, typeof PAR_DEF[o.k]==='number'? Number(sel.value): sel.value); row.appendChild(sel);
+    } else {
+      const st=document.createElement('div'); st.className='stepper';
+      st.innerHTML=`<button aria-label="Menos">−</button><span>${pr[o.k]}</span><button aria-label="Más">+</button>`;
+      const [m,,p]=st.children; m.onclick=()=>setPar(o.k, Math.max(o.min, pr[o.k]-1)); p.onclick=()=>setPar(o.k, Math.min(o.max, pr[o.k]+1));
+      row.appendChild(st);
+    }
+    box.appendChild(row);
+  });
+}
+function setPar(k,v){ DB.set.par=Object.assign({},DB.set.par||{},{[k]:v}); save(); recompute(); renderPar(); }
+function renderGuia(){
+  const pr=PAR();
+  const S1=[['red','Sangrado','Menstruación o cualquier sangrado.'],['spot','Manchado','Unas gotas de sangre.'],['green','Seco','No sintió ni vio nada. Días infértiles si su PBI es seco.'],['yellow','PBI de flujo','Su secreción de siempre, sin cambios. Infértil.'],['white','Cambio (bebé)','Algo distinto a su PBI: posiblemente fértil.']];
+  let h=S1.map(([c,t,d])=>`<div class="srow">${stampHTML({e:{},color:c})}<div><b>${t}</b><br><span class="muted">${d}</span></div></div>`).join('');
+  h+=`<div class="srow">${stampHTML({e:{},color:'white',x:true})}<div><b>Cúspide ✕</b><br><span class="muted">Último día resbaloso. El día más fértil.</span></div></div>`;
+  h+=`<div class="srow">${stampHTML({e:{},color:'green',num:1})}<div><b>Números 1, 2, 3</b><br><span class="muted">Días de espera contados después de la Cúspide o de un cambio.</span></div></div>`;
+  h+=`<div class="srow">${stampHTML({e:{i:true},color:'green'})}<div><b>I</b><br><span class="muted">Hubo relación ese día.</span></div></div>`;
+  h+=`<div class="srow">${stampHTML({e:{},color:'green',warn:true})}<div><b>⚠️ Alerta</b><br><span class="muted">Relación en un día de espera (si el objetivo es posponer).</span></div></div>`;
+  $('guiaSellos').innerHTML=h;
+  $('guiaReglas').innerHTML=`
+    <div class="rule-c"><b>Regla 1 · Menstruación</b>Evitar relaciones en los días de sangrado ${pr.rule1==='mod'?'moderado y abundante':'abundante'}: el sangrado puede ocultar el moco.</div>
+    <div class="rule-c"><b>Regla 2 · Días del PBI</b>Disponible en la noche, en noches alternas (un día sí, otro no), para que el semen no confunda la observación.</div>
+    <div class="rule-c"><b>Regla 3 · Cambio del PBI</b>Ante cualquier cambio, esperar. Si vuelve el PBI, contar ${pr.wait} días y quedar disponible la noche del día ${pr.wait+1}.</div>
+    <div class="rule-c"><b>Regla 4 · Cúspide</b>Disponible a cualquier hora desde el día ${pr.post+1} después de la Cúspide hasta la siguiente regla.</div>`;
+}
+function renderAll(){ if(view==='cal') renderCal(); if(view==='guia') renderGuia(); if(view==='hoy') renderHoy(); if(view==='graf') renderChart(); if(view==='ajus') renderAjustes(); }
+
+function show(v){
+  view=v;
+  ['hoy','cal','graf','guia','ajus'].forEach(x=> $('v-'+x).classList.toggle('hidden', x!==v));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.v===v));
+  renderAll(); window.scrollTo(0,0);
+}
+
+async function pack(obj){
+  const json = JSON.stringify(obj);
+  if(window.CompressionStream){
+    const cs = new Blob([json]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+    const buf = new Uint8Array(await new Response(cs).arrayBuffer());
+    let s=''; buf.forEach(b=>s+=String.fromCharCode(b));
+    return 'z'+btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  }
+  return 'j'+btoa(unescape(encodeURIComponent(json))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+async function unpack(str){
+  const t=str[0], b64=str.slice(1).replace(/-/g,'+').replace(/_/g,'/');
+  const bin=atob(b64);
+  if(t==='z'){
+    const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+    const ds=new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    return JSON.parse(await new Response(ds).text());
+  }
+  return JSON.parse(decodeURIComponent(escape(bin)));
+}
+
+async function share(){
+  const data = {days:DB.days, ov:DB.ov, set:Object.assign({},DB.set), at:new Date().toISOString()};
+  const url = location.href.split('#')[0] + '#lector=' + await pack(data);
+  const title = 'Gráfica' + (DB.set.name?' de '+DB.set.name:'');
+  try{ if(navigator.share){ await navigator.share({title, text:title+' (solo lectura)', url}); return; } }catch(e){ if(e && e.name==='AbortError') return; }
+  const ta = `<div style="font-size:16px;margin:4px 0 10px">Enlace de solo lectura para el lector</div><textarea readonly id="shTxt">${url}</textarea>`;
+  sheet(ta, [{t:'Copiar enlace', cls:'main', keep:true, fn:async()=>{ try{ await navigator.clipboard.writeText(url); toast('Enlace copiado'); }catch(e){ const t=$('shTxt'); t.select(); toast('Seleccione y copie'); } }},{t:'Cerrar', cls:'plain'}]);
+}
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='ciclo-natural-respaldo-'+today()+'.json'; a.click();
+  DB.meta=Object.assign({},DB.meta||{},{lastBackup:today()}); save(); renderAll();
+  setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+}
+function importJSON(file){
+  const fr=new FileReader();
+  fr.onload=()=>{ try{ const o=JSON.parse(fr.result); if(!o.days) throw 0; ask('¿Reemplazar los datos actuales con el respaldo?','Reemplazar').then(ok=>{ if(!ok) return; DB=Object.assign(blank(),o); save(); recompute(); renderAll(); toast('Respaldo importado'); }); }catch(e){ toast('Archivo no válido'); } };
+  fr.readAsText(file);
+}
+
+function wire(){
+  buildChips('g-b',B,'b'); buildChips('g-s',S,'s'); buildChips('g-a',A,'a'); buildQuick();
+  $('prevDay').onclick=()=>{ curDate=addDays(curDate,-1); renderHoy(); };
+  $('nextDay').onclick=()=>{ if(curDate<today()){ curDate=addDays(curDate,1); renderHoy(); } };
+  $('datePick').onchange=e=>{ if(e.target.value){ curDate=e.target.value; renderHoy(); } };
+  $('t-i').onclick=()=>setEntry({i:true}); $('t-i0').onclick=()=>setEntry({i:false});
+  $('t-pbi').onclick=()=>{ const e=DB.days[curDate]; setEntry({pbi: e&&e.pbi===true?null:true}); };
+  $('t-chg').onclick=()=>{ const e=DB.days[curDate]; setEntry({pbi: e&&e.pbi===false?null:false}); };
+  $('noteToggle').onclick=()=>{ $('noteToggle').classList.add('hidden'); $('nota').classList.remove('hidden'); $('nota').focus(); };
+  $('nota').oninput=e=>{ if(!DB.days[curDate]) DB.days[curDate]={b:'no',s:'seca',a:'nada',i:false,n:''}; DB.days[curDate].n=e.target.value; save(); };
+  $('nota').onblur=()=>{ recompute(); renderAll(); };
+  $('delDay').onclick=()=>{ if(DB.days[curDate]) ask('¿Borrar el registro de '+fmtShort(curDate)+'?','Borrar').then(ok=>{ if(ok){ delete DB.days[curDate]; save(); recompute(); renderAll(); } }); };
+  document.querySelectorAll('nav button').forEach(b=> b.onclick=()=>show(b.dataset.v));
+  $('chartMode').onclick=e=>{ const m=e.target.dataset.m; if(!m) return; chartMode=m; [...$('chartMode').children].forEach(b=>b.classList.toggle('on',b.dataset.m===m)); renderChart(); };
+  const bindSet=(id,k)=> $(id).onchange=e=>{ DB.set[k]=e.target.value; save(); recompute(); renderAll(); };
+  bindSet('sGoal','goal'); bindSet('sGuide','guide'); bindSet('sSit','sit');
+  $('sName').oninput=e=>{ DB.set.name=e.target.value; save(); };
+  $('shareBtn').onclick=share;
+  $('expBtn').onclick=exportJSON;
+  $('impBtn').onclick=()=>$('impFile').click();
+  $('impFile').onchange=e=>{ if(e.target.files[0]) importJSON(e.target.files[0]); e.target.value=''; };
+  $('parReset').onclick=()=>ask('¿Restaurar los parámetros a los valores del método?','Restaurar').then(ok=>{ if(ok){ DB.set.par={}; save(); recompute(); renderPar(); toast('Valores restaurados'); } });
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>show(b.dataset.go));
+  document.querySelectorAll('.pdfBtn').forEach(b=>b.onclick=pdfMenu);
+  $('calPrev').onclick=()=>{ calMonth=monthAdd(calMonth,-1); renderCal(); };
+  $('calNext').onclick=()=>{ if(calMonth<today().slice(0,7)){ calMonth=monthAdd(calMonth,1); renderCal(); } };
+  $('calToday').onclick=()=>{ calMonth=today().slice(0,7); renderCal(); };
+}
+
+async function init(){
+  const m = location.hash.match(/lector=([^&]+)/);
+  if(m){
+    try{
+      const o = await unpack(m[1]);
+      READER = true; DB = Object.assign(blank(), o); DB.set = Object.assign(blank().set, o.set||{});
+      document.querySelectorAll('nav button[data-v=hoy],nav button[data-v=ajus]').forEach(b=>b.classList.add('hidden'));
+      document.querySelector('#v-graf .hint').textContent = 'Solo lectura · compartida el '+(o.at?fmtLong(o.at.slice(0,10)):'')+'. Toque un día para ver detalles.';
+    }catch(e){ load(); toast('El enlace de lector no es válido'); }
+  } else {
+    load();
+    const fromIdb = await idbGet();   // recuperar si el almacenamiento principal se borró o está más viejo
+    if(fromIdb){ try{ const o=JSON.parse(fromIdb); const a=(DB.meta||{}).updatedAt||'', b=(o.meta||{}).updatedAt||''; if(b>a || !Object.keys(DB.days).length){ DB=Object.assign(blank(),o); DB.ov=Object.assign({peak:{},start:{}},o.ov||{}); DB.set=Object.assign(blank().set,o.set||{}); try{ localStorage.setItem(KEY, JSON.stringify(DB)); }catch(e){} } }catch(e){} }
+    try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+  }
+  wire(); recompute();
+  show(READER ? 'graf' : 'hoy');
+  if(!READER && 'serviceWorker' in navigator && location.protocol==='https:'){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+}
+init();
+</script>
+</body>
+</html>
